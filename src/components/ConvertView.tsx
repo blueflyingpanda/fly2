@@ -58,12 +58,27 @@ export function ConvertView() {
     <Page title={t.convert_title}>
       <form onSubmit={run} className="flex flex-col gap-4">
         <Field label={t.convert_amount}>
-          <Input value={amount} onChange={(e) => setAmount(e.target.value)} inputMode="numeric" required />
+          <Input
+            value={amount}
+            onChange={(e) => {
+              setAmount(e.target.value);
+              setResult(null);
+            }}
+            inputMode="numeric"
+            required
+          />
         </Field>
 
         <div className="flex items-end gap-2">
           <Field label={t.convert_from}>
-            <Select value={from} onChange={setFrom} options={options} />
+            <Select
+              value={from}
+              onChange={(v) => {
+                setFrom(v);
+                setResult(null);
+              }}
+              options={options}
+            />
           </Field>
           <button
             type="button"
@@ -74,7 +89,14 @@ export function ConvertView() {
             <ArrowLeftRight className="h-4 w-4" />
           </button>
           <Field label={t.convert_to}>
-            <Select value={to} onChange={setTo} options={options} />
+            <Select
+              value={to}
+              onChange={(v) => {
+                setTo(v);
+                setResult(null);
+              }}
+              options={options}
+            />
           </Field>
         </div>
 

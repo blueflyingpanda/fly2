@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addDirection, updateDirection } from "../core/api";
 import type { Airport, Direction, NotifyPref } from "../core/types";
 import { useLocale } from "../contexts/LocaleContext";
@@ -38,6 +38,21 @@ export function DirectionForm({ open, onClose, onSaved, airports, editing }: Dir
   const [threshold, setThreshold] = useState(editing ? String(editing.threshold) : "0");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // The form stays mounted while `open` toggles, so re-seed fields each time it
+  // opens (or the edited route changes) — otherwise Edit shows stale/empty values.
+  useEffect(() => {
+    if (!open) return;
+    setMode("manual");
+    setSrc(editing?.src ?? "");
+    setDst(editing?.dst ?? "");
+    setLink("");
+    setDate(editing?.travel_date ?? "");
+    setPrice(editing ? String(editing.price) : "");
+    setNotify(editing ? prefFromDirection(editing) : "any");
+    setThreshold(editing ? String(editing.threshold) : "0");
+    setError(null);
+  }, [open, editing]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();

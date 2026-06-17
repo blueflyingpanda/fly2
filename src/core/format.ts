@@ -39,24 +39,68 @@ export function formatMoney(amount: number, code: string): string {
   return sym.length === 1 ? `${amount}${sym}` : `${amount} ${sym}`;
 }
 
-/** Translate a stored rrule into a short human label (returns key + params for i18n). */
-export function describeSchedule(rrule: string): { key: string; n?: number; hour?: number; hours?: string } {
-  if (!rrule) return { key: "off" };
+export type ScheduleMode = "interval" | "daily" | "range";
+
+export interface ScheduleSpec {
+  kind: "off" | "interval" | "daily" | "range" | "custom";
+  /** interval: hours between checks (interval & range modes) */
+  interval?: number;
+  /** daily: hour of day (0-23) */
+  hour?: number;
+  /** range: first / last hour of day (0-23) */
+  start?: number;
+  end?: number;
+}
+
+/** Decode a stored rrule into a structured, lossless-enough spec for display + editing. */
+export function describeSchedule(rrule: string): ScheduleSpec {
+  if (!rrule) return { kind: "off" };
 
   const hourly = /FREQ=HOURLY;INTERVAL=(\d+)/.exec(rrule);
   if (hourly) {
-    const n = Number(hourly[1]);
-    return n === 1 ? { key: "everyHour" } : { key: "everyNHours", n };
+    return { kind: "interval", interval: Number(hourly[1]) };
   }
 
   const byHour = /BYHOUR=([0-9,]+)/.exec(rrule);
   if (byHour) {
     const hours = byHour[1].split(",").map(Number);
-    if (hours.length === 1) return { key: "dailyAt", hour: hours[0] };
-    return { key: "range", hours: `${hours[0]}:00–${hours[hours.length - 1]}:00` };
+    if (hours.length === 1) return { kind: "daily", hour: hours[0] };
+    // recover the true step between fire-hours (e.g. 8,10,12,… -> every 2h)
+    const interval = hours[1] - hours[0];
+    return { kind: "range", start: hours[0], end: hours[hours.length - 1], interval };
   }
 
-  return { key: "custom" };
+  return { kind: "custom" };
+}
+
+/** Format a 24h hour as a zero-padded clock label, e.g. 8 -> "08:00". */
+export function formatHour(hour: number): string {
+  return `${String(hour).padStart(2, "0")}:00`;
+}
+
+/** Convert a 24h hour to the am/pm token the backend ScheduleParser accepts (18 -> "6pm"). */
+export function hourToken(hour: number): string {
+  const period = hour < 12 ? "am" : "pm";
+  const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+  return `${hour12}${period}`;
+}
+
+/** Build a schedule pattern string the backend understands from structured input. */
+export function buildSchedulePattern(spec: ScheduleSpec): string | null {
+  switch (spec.kind) {
+    case "interval":
+      return spec.interval && spec.interval >= 1 ? `${spec.interval}h` : null;
+    case "daily":
+      return spec.hour === undefined ? null : hourToken(spec.hour);
+    case "range": {
+      const { start, end, interval = 1 } = spec;
+      if (start === undefined || end === undefined || start >= end) return null;
+      const base = `${hourToken(start)}-${hourToken(end)}`;
+      return interval > 1 ? `${base} ${interval}h` : base;
+    }
+    default:
+      return null;
+  }
 }
 
 const NAME_TO_ISO2: Record<string, string> = {
