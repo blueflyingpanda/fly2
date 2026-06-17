@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
+/* ── Light theme tokens (RGB channels for Tailwind opacity modifiers) ── */
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  color-scheme: light;
+
+  --color-accent: 139 127 240; /* #8B7FF0 lavender */
+  --color-accent-soft: 236 233 253; /* #ECE9FD */
+  --color-bg: 247 246 252; /* #F7F6FC */
+  --color-surface: 255 255 255;
+  --color-card: 255 255 255;
+  --color-border: 230 227 240; /* #E6E3F0 */
+  --color-text: 31 27 46; /* #1F1B2E */
+  --color-muted: 107 101 128; /* #6B6580 */
+  --color-success: 22 163 74; /* #16A34A */
+  --color-danger: 225 29 72; /* #E11D48 */
+
+  --bg-start: #efeafe;
+  --bg-mid: #f5f3fc;
+  --bg-end: #f7f6fc;
+}
+
+/* ── Dark theme tokens ── */
+.dark {
+  color-scheme: dark;
+
+  --color-accent: 169 157 247; /* #A99DF7 */
+  --color-accent-soft: 42 38 64; /* #2A2640 */
+  --color-bg: 19 17 32; /* #131120 */
+  --color-surface: 27 24 48; /* #1B1830 */
+  --color-card: 33 30 54; /* #211E36 */
+  --color-border: 50 45 74; /* #322D4A */
+  --color-text: 236 234 247; /* #ECEAF7 */
+  --color-muted: 157 151 181; /* #9D97B5 */
+  --color-success: 52 211 153; /* #34D399 */
+  --color-danger: 251 113 133; /* #FB7185 */
+
+  --bg-start: #1a1730;
+  --bg-mid: #16132a;
+  --bg-end: #110f1d;
+}
+
+html {
+  background-color: var(--bg-end);
+}
+
+body {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  color: rgb(var(--color-text));
+  overflow-x: hidden;
+  min-height: 100vh;
+  background-image: radial-gradient(
+    circle at 82% 6%,
+    var(--bg-start) 0,
+    var(--bg-mid) 45%,
+    var(--bg-end) 100%
+  );
+  background-attachment: fixed;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Subtle, theme-aware scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-border));
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
