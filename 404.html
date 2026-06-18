@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex,follow" />
+    <title>fly2 — flight price tracker</title>
+    <script>
+      // fly2 is a single-page app (no client routes) — send any unknown path
+      // under the project base back to the app entry point.
+      var seg = location.pathname.split("/").filter(Boolean)[0] || "fly2";
+      location.replace("/" + seg + "/");
+    </script>
+  </head>
+  <body></body>
+</html>

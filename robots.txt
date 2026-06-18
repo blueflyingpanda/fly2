@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blueflyingpanda.github.io/fly2/sitemap.xml
