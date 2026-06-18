@@ -8,6 +8,64 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
     />
     <meta name="theme-color" content="#8b7ff0" />
+    <title>fly2 — flight price tracker | Трекер цен на авиабилеты</title>
+
+    <!-- Primary meta -->
+    <meta
+      name="description"
+      content="fly2 tracks flight prices for your routes and alerts you the moment fares change. Add routes, set target prices and thresholds, view price-history charts, find promo fares, and convert currencies. Works in the browser and as a Telegram Mini App."
+    />
+    <meta
+      name="keywords"
+      content="fly2, flight price tracker, airfare alerts, cheap flights, flight price monitor, fare watcher, price history, promo fares, flyone, wizzair, Telegram mini app, трекер цен на авиабилеты, дешёвые авиабилеты, отслеживание цен на билеты"
+    />
+    <meta name="author" content="Ilya Sagaidac" />
+    <meta name="application-name" content="fly2" />
+    <meta name="robots" content="index,follow" />
+    <meta name="google-site-verification" content="6N8EvRJGR8-CYwhFJCKIQOiHHdYptQyTB5pioJB9KME" />
+    <link rel="canonical" href="https://blueflyingpanda.github.io/fly2/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="fly2 — flight price tracker" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ru_RU" />
+    <meta property="og:url" content="https://blueflyingpanda.github.io/fly2/" />
+    <meta property="og:title" content="fly2 — flight price tracker | Трекер цен на авиабилеты" />
+    <meta
+      property="og:description"
+      content="Track flight prices for your routes and get alerted when fares change. Price-history charts, promo search, currency converter. Browser & Telegram Mini App."
+    />
+    <meta property="og:image" content="https://blueflyingpanda.github.io/fly2/favicon.svg" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content="https://blueflyingpanda.github.io/fly2/" />
+    <meta name="twitter:title" content="fly2 — flight price tracker | Трекер цен на авиабилеты" />
+    <meta
+      name="twitter:description"
+      content="Track flight prices for your routes and get alerted when fares change. Price-history charts, promo search, currency converter. Browser & Telegram Mini App."
+    />
+    <meta name="twitter:image" content="https://blueflyingpanda.github.io/fly2/favicon.svg" />
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "fly2 — flight price tracker",
+        "alternateName": ["fly2", "Трекер цен на авиабилеты"],
+        "url": "https://blueflyingpanda.github.io/fly2/",
+        "description": "fly2 tracks flight prices for your routes and alerts you when fares change. Add routes, set target prices and thresholds, view price-history charts, find promo fares, and convert currencies. Works in the browser and as a Telegram Mini App.",
+        "inLanguage": ["en", "ru"],
+        "creator": { "@type": "Person", "name": "Ilya Sagaidac" },
+        "applicationCategory": "TravelApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "keywords": "flight price tracker, airfare alerts, cheap flights, fare watcher, price history, promo fares, Telegram mini app, трекер цен на авиабилеты"
+      }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,10 +74,19 @@
     />
     <!-- Telegram Mini App runtime (no-op in a normal browser) -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <title>fly2 — flight price tracker</title>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <main>
+        <h1>fly2 — flight price tracker</h1>
+        <p>
+          fly2 monitors flight prices for the routes you care about and notifies you when fares
+          change. It also offers price-history charts, promo search, and a currency converter.
+        </p>
+        <p>Please enable JavaScript to use the app. Available in the browser and as a Telegram Mini App.</p>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
