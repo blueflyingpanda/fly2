@@ -88,6 +88,8 @@ const en = {
   promo_searching: "Searching airlines…",
   promo_noResults: "No fares found under that price.",
   promo_results: (n: number) => `${n} fare${n === 1 ? "" : "s"} found`,
+  promo_noLink: "Booking link unavailable for this airline.",
+  promo_openHint: "Tap a fare to open the airline's site",
 
   // convert
   convert_title: "Currency converter",
@@ -243,6 +245,8 @@ const ru: Translations = {
   promo_searching: "Ищем по авиакомпаниям…",
   promo_noResults: "Не найдено билетов дешевле указанной цены.",
   promo_results: (n: number) => `Найдено билетов: ${n}`,
+  promo_noLink: "Ссылка на бронирование для этой авиакомпании недоступна.",
+  promo_openHint: "Нажмите на билет, чтобы открыть сайт авиакомпании",
 
   convert_title: "Конвертер валют",
   convert_amount: "Сумма",

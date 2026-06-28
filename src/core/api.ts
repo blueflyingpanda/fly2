@@ -7,6 +7,7 @@ import type {
   CreateDirectionPayload,
   CurrencyInfo,
   Direction,
+  LinkResponse,
   MessageResponse,
   NotifyPref,
   PriceHistory,
@@ -113,6 +114,10 @@ export const promo = (src: string, travelDate: string, price: number) =>
     method: "POST",
     body: JSON.stringify({ src, travel_date: travelDate, price }),
   });
+
+// Booking links per airline for a route+date (used to open the airline's site).
+export const getFlightLink = (src: string, dst: string, travelDate: string) =>
+  request<LinkResponse>(`/link/${src}/${dst}/${travelDate}`);
 
 // ── Airports & price history ────────────────────────────────────────────────
 export const getAirports = () => request<Airport[]>("/airports");

@@ -59,6 +59,15 @@ export interface PromoFare {
   travel_date: string;
 }
 
+export interface AirlineLink {
+  airline: string;
+  url: string;
+}
+
+export interface LinkResponse {
+  links: AirlineLink[];
+}
+
 export interface MessageResponse {
   detail: string;
   created?: boolean | null;

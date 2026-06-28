@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, ExternalLink, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { promo } from "../core/api";
+import { getFlightLink, promo } from "../core/api";
 import type { PromoFare } from "../core/types";
 import { countryFlag, formatDate, formatMoney } from "../core/format";
+import { openExternal } from "../core/telegram";
 import { useLocale } from "../contexts/LocaleContext";
 import { useToast } from "../contexts/ToastContext";
 import { useAirports } from "../hooks/useAirports";
@@ -25,6 +26,7 @@ export function PromoView() {
   const [price, setPrice] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<PromoFare[] | null>(null);
+  const [linkingKey, setLinkingKey] = useState<string | null>(null);
 
   const search = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +38,22 @@ export function PromoView() {
       toast(err instanceof Error ? err.message : t.errGeneric, "error");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const openFare = async (f: PromoFare, key: string) => {
+    if (linkingKey) return;
+    setLinkingKey(key);
+    try {
+      const { links } = await getFlightLink(f.src, f.dst, f.travel_date);
+      // prefer the fare's own airline; fall back to any available booking link
+      const match = links.find((l) => l.airline === f.airline) ?? links[0];
+      if (match) openExternal(match.url);
+      else toast(t.promo_noLink, "error");
+    } catch (err) {
+      toast(err instanceof Error ? err.message : t.errGeneric, "error");
+    } finally {
+      setLinkingKey(null);
     }
   };
 
@@ -77,27 +95,46 @@ export function PromoView() {
             <p className="px-1 text-xs font-semibold uppercase tracking-wider text-muted">
               {t.promo_results(results.length)}
             </p>
-            {results.map((f, i) => (
-              <motion.div
-                key={`${f.dst}-${f.airline}-${i}`}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.04 }}
-              >
-                <Card className="flex items-center justify-between gap-3 py-3">
-                  <div className="flex items-center gap-2 font-semibold text-text">
-                    <span>{f.src}</span>
-                    <ArrowRight className="h-4 w-4 text-accent" />
-                    <span>{countryFlag(airports.find((a) => a.code === f.dst)?.country ?? "")}</span>
-                    <span>{f.dst}</span>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <span className="text-sm font-bold text-accent">{formatMoney(f.price, f.currency)}</span>
-                    <span className="text-xs text-muted">{f.airline} · {formatDate(f.travel_date)}</span>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
+            <p className="px-1 -mt-1 text-xs text-muted">{t.promo_openHint}</p>
+            {results.map((f, i) => {
+              const key = `${f.dst}-${f.airline}-${i}`;
+              const linking = linkingKey === key;
+              return (
+                <motion.div
+                  key={key}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.04 }}
+                >
+                  <Card
+                    onClick={() => openFare(f, key)}
+                    className="flex items-center justify-between gap-3 py-3"
+                  >
+                    <div className="flex items-center gap-2 font-semibold text-text">
+                      <span>{f.src}</span>
+                      <ArrowRight className="h-4 w-4 text-accent" />
+                      <span>{countryFlag(airports.find((a) => a.code === f.dst)?.country ?? "")}</span>
+                      <span>{f.dst}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex flex-col items-end">
+                        <span className="text-sm font-bold text-accent">
+                          {formatMoney(f.price, f.currency)}
+                        </span>
+                        <span className="text-xs text-muted">
+                          {f.airline} · {formatDate(f.travel_date)}
+                        </span>
+                      </div>
+                      {linking ? (
+                        <Spinner className="h-4 w-4" />
+                      ) : (
+                        <ExternalLink className="h-4 w-4 shrink-0 text-muted" />
+                      )}
+                    </div>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         )}
       </div>

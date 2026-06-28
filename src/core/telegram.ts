@@ -9,6 +9,7 @@ interface TelegramWebApp {
   themeParams: Record<string, string>;
   ready: () => void;
   expand: () => void;
+  openLink?: (url: string, options?: { try_instant_view?: boolean }) => void;
   setHeaderColor?: (color: string) => void;
   setBackgroundColor?: (color: string) => void;
   onEvent?: (event: string, cb: () => void) => void;
@@ -40,6 +41,21 @@ export function getInitData(): string | null {
 export function getTelegramColorScheme(): "light" | "dark" | null {
   const wa = getWebApp();
   return wa ? wa.colorScheme : null;
+}
+
+/**
+ * Open an external URL. Inside Telegram, hand it to the client's openLink so it
+ * launches the system browser; otherwise open a new tab.
+ */
+export function openExternal(url: string): void {
+  const wa = getWebApp();
+  if (wa?.openLink) {
+    wa.openLink(url);
+    return;
+  }
+  if (typeof window !== "undefined") {
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
 }
 
 /** Signal readiness and request full-height layout. Safe to call always. */
